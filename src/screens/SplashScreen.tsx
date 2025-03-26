@@ -8,24 +8,24 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-// import { RootStackParamList } from '../navigation/AppNavigator';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
-// type NavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type SplashScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Splash'>;
 
 const { width, height } = Dimensions.get('window');
 
 const SplashScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<SplashScreenNavigationProp>();
 
   // Animation values
-  const leftLogoY = useSharedValue(0);
-  const rightLogoY = useSharedValue(0);
+  const logoTopY = useSharedValue(0);
+  const bottomLogoY = useSharedValue(0);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
     // Animate logos flying out of the screen
-    leftLogoY.value = withTiming(-height, { duration: 1000 });
-    rightLogoY.value = withTiming(-height, { duration: 1000 }, () => {
+    logoTopY.value = withTiming(-height, { duration: 91000 });
+    bottomLogoY.value = withTiming(-height, { duration: 91000 }, () => {
       runOnJS(showNextScreen)();
     });
   }, []);
@@ -33,17 +33,16 @@ const SplashScreen = () => {
   const showNextScreen = () => {
     opacity.value = withTiming(1, { duration: 500 });
     setTimeout(() => {
-      // navigation.replace('Home');
-      // navigation.navigate('');
+      navigation.replace('MainApp');
     }, 1500);
   };
 
-  const leftLogoStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: leftLogoY.value }],
+  const logoTopStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: logoTopY.value }],
   }));
 
-  const rightLogoStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: rightLogoY.value }],
+  const bottomLogoStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: bottomLogoY.value }],
   }));
 
   const backgroundStyle = useAnimatedStyle(() => ({
@@ -54,17 +53,17 @@ const SplashScreen = () => {
     <View style={styles.container}>
       {/* Logos Animating Out */}
       <Animated.Image
-        source={require('./assets/logo-left.png')} // Update with actual path
-        style={[styles.logoLeft, leftLogoStyle]}
+        source={require('../assets/images/top.png')} // Update with actual path
+        style={[styles.logoTop, logoTopStyle]}
       />
       <Animated.Image
-        source={require('./assets/logo-right.png')} // Update with actual path
-        style={[styles.logoRight, rightLogoStyle]}
+        source={require('../assets/images/bottom.png')} // Update with actual path
+        style={[styles.logoBottom, bottomLogoStyle]}
       />
 
       {/* Blue Background Fading In */}
       <Animated.View style={[styles.blueScreen, backgroundStyle]}>
-        <Image source={require('./assets/logo.png')} style={styles.logo} />
+        {/* <Image source={require('./assets/logo.png')} style={styles.logo} /> */}
       </Animated.View>
     </View>
   );
@@ -77,17 +76,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logoLeft: {
+  logoTop: {
     position: 'absolute',
-    width: 100,
-    height: 100,
+    // width: 100,
+    // height: 100,
     left: width / 2 - 60,
     top: height / 2 - 50,
   },
-  logoRight: {
+  logoBottom: {
     position: 'absolute',
-    width: 100,
-    height: 100,
+    // width: 100,
+    // height: 100,
     left: width / 2 - 40,
     top: height / 2 - 50,
   },
