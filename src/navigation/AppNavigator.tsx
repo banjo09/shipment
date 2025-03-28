@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 // import SplashScreen from '../screens/SplashScreen';
 import MainTabNavigator from './MainTabNavigator';
 import NewSplashScreen from '../screens/NewSplashScreen';
@@ -13,7 +13,13 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    <Stack.Navigator
+      initialRouteName="Splash"
+      screenOptions={{
+        gestureEnabled: true,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, // Slide animation
+      }}
+    >
       <Stack.Screen
         name="Splash"
         component={SplashScreen}
