@@ -17,19 +17,25 @@ const { width, height } = Dimensions.get('window');
 const SplashScreen = () => {
   const navigation = useNavigation<SplashScreenNavigationProp>();
 
-  // Animation values
-  const scale = useSharedValue(1);
+  // Shared scale values
+  const topScaleY = useSharedValue(1);
+  const bottomScaleY = useSharedValue(1);
+  const commonScaleX = useSharedValue(1);
+
+  // Movement values
   const topLogoY = useSharedValue(0);
   const bottomLogoY = useSharedValue(0);
   const topLogoScale = useSharedValue(1);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    // Step 1: Increase size together without overlap
-    scale.value = withTiming(1.5, { duration: 1500 }, () => {
+    // Step 1: Increase size together (top expands UP, bottom expands DOWN)
+    topScaleY.value = withTiming(1.5, { duration: 1500 });
+    bottomScaleY.value = withTiming(1.5, { duration: 1500 });
+    commonScaleX.value = withTiming(1.5, { duration: 1500 }, () => {
       // Step 2: Animate logos flying out
       topLogoY.value = withTiming(-height, { duration: 1000 });
-      bottomLogoY.value = withTiming(-height * 0.5, { duration: 1000 });
+      bottomLogoY.value = withTiming(-height, { duration: 1000 });
       topLogoScale.value = withTiming(2, { duration: 1000 }, () => {
         runOnJS(showNextScreen)();
       });
@@ -46,14 +52,16 @@ const SplashScreen = () => {
   const topLogoStyle = useAnimatedStyle(() => ({
     transform: [
       { translateY: topLogoY.value },
-      { scale: scale.value * topLogoScale.value }, // Scale initially together, then top logo grows more
+      { scaleX: commonScaleX.value }, // Both logos scale X together
+      { scaleY: topScaleY.value * topLogoScale.value }, // Top expands UP initially, then grows more while moving up
     ],
   }));
 
   const bottomLogoStyle = useAnimatedStyle(() => ({
     transform: [
       { translateY: bottomLogoY.value },
-      { scale: scale.value }, // Scale only from first step
+      { scaleX: commonScaleX.value }, // Both logos scale X together
+      { scaleY: bottomScaleY.value }, // Bottom expands DOWN initially but does NOT scale further
     ],
   }));
 
