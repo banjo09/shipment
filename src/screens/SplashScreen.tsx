@@ -18,31 +18,43 @@ const SplashScreen = () => {
   const navigation = useNavigation<SplashScreenNavigationProp>();
 
   // Animation values
-  const logoTopY = useSharedValue(0);
+  const scale = useSharedValue(1);
+  const topLogoY = useSharedValue(0);
   const bottomLogoY = useSharedValue(0);
+  const topLogoScale = useSharedValue(1);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    // Animate logos flying out of the screen
-    logoTopY.value = withTiming(-height, { duration: 91000 });
-    bottomLogoY.value = withTiming(-height, { duration: 91000 }, () => {
-      runOnJS(showNextScreen)();
+    // Step 1: Increase size together without overlap
+    scale.value = withTiming(1.5, { duration: 1500 }, () => {
+      // Step 2: Animate logos flying out
+      topLogoY.value = withTiming(-height, { duration: 1000 });
+      bottomLogoY.value = withTiming(-height * 0.5, { duration: 1000 });
+      topLogoScale.value = withTiming(2, { duration: 1000 }, () => {
+        runOnJS(showNextScreen)();
+      });
     });
   }, []);
 
   const showNextScreen = () => {
-    opacity.value = withTiming(1, { duration: 500 });
+    opacity.value = withTiming(1, { duration: 2500 });
     setTimeout(() => {
       navigation.replace('MainApp');
-    }, 1500);
+    }, 2500);
   };
 
-  const logoTopStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: logoTopY.value }],
+  const topLogoStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: topLogoY.value },
+      { scale: scale.value * topLogoScale.value }, // Scale initially together, then top logo grows more
+    ],
   }));
 
   const bottomLogoStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: bottomLogoY.value }],
+    transform: [
+      { translateY: bottomLogoY.value },
+      { scale: scale.value }, // Scale only from first step
+    ],
   }));
 
   const backgroundStyle = useAnimatedStyle(() => ({
@@ -54,7 +66,7 @@ const SplashScreen = () => {
       {/* Logos Animating Out */}
       <Animated.Image
         source={require('../assets/images/top.png')} // Update with actual path
-        style={[styles.logoTop, logoTopStyle]}
+        style={[styles.logoTop, topLogoStyle]}
       />
       <Animated.Image
         source={require('../assets/images/bottom.png')} // Update with actual path
@@ -76,20 +88,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   logoTop: {
     position: 'absolute',
-    // width: 100,
-    // height: 100,
-    left: width / 2 - 60,
-    top: height / 2 - 50,
+    // left: width / 2 - 20,
+    // top: height / 2 - 20,
+    left: width / 2 - 40,
+    top: height / 2 - 80,
+    // top: height / 2 - 40,
+    // top: height / 2 + 140,
+    width: 150,
+    height: 50,
   },
   logoBottom: {
     position: 'absolute',
-    // width: 100,
-    // height: 100,
+    // width: 90,
+    // height: 50,
+    width: 120,
+    height: 80,
+    // left: width / 2 - 80,
+    // top: height / 2 + 35,
     left: width / 2 - 40,
-    top: height / 2 - 50,
+    top: height / 2 + 20,
+    // left: width / 2 - 150,
+    // top: height / 2 - 300,
   },
+
+  // logoTop: {
+  //   position: 'absolute',
+  //   left: width / 2 - 40,
+  //   top: height / 2 + 140,
+  // },
+  // logoBottom: {
+  //   position: 'absolute',
+  //   left: width / 2 - 150,
+  //   top: height / 2 - 300,
+  // },
+
   blueScreen: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#2E50C1', // Blue color
@@ -97,6 +132,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     opacity: 0,
   },
+
   logo: {
     width: 120,
     height: 120,
