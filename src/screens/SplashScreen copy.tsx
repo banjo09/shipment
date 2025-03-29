@@ -48,7 +48,7 @@ const SplashScreen = () => {
 
   const showNextScreen = () => {
     setTimeout(() => {
-      navigation.replace('Login');
+      navigation.replace('MainApp');
     }, 1000);
   };
 
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 
   blueScreen: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#2F50C1',
+    backgroundColor: '#2E50C1',
     opacity: 0, // Start transparent, then fade in
   },
 });
