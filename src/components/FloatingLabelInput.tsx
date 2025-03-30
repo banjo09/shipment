@@ -41,7 +41,7 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
   // Interpolate label position and size
   const labelY = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [17, 8],
+    outputRange: [2, -7],
   });
 
   const labelFontSize = animatedValue.interpolate({
@@ -49,8 +49,14 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
     outputRange: [16, 12],
   });
 
+  // const labelColor = isFocused ? '#666' : '#999';
+  const labelColor = isFocused ? '#58536E' : '#A7A3B3';
+  const borderColor = isFocused ? 'rgba(47, 80, 193, 1)' : 'rgba(244, 242, 248, 0.5)';
+  const textColor = '#3366FF';
+  const backgroundColor = '#F7F7F9';
+
   return (
-    <View style={[styles.container, containerStyle]}>
+    <View style={[styles.container, containerStyle, { borderColor }]}>
       <Animated.Text
         style={[
           styles.label,
@@ -58,6 +64,7 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
           {
             transform: [{ translateY: labelY }],
             fontSize: labelFontSize,
+            color: labelColor,
           },
         ]}
       >
@@ -80,22 +87,24 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     marginVertical: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    backgroundColor: 'rgba(244, 242, 248, 0.5)'
   },
   label: {
     position: 'absolute',
+    top: 17,
     left: 12,
-    color: '#666',
+    // color: '#666',
   },
   textInput: {
     // height: 50,
     height: 55,
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#DDD',
-    borderRadius: 8,
     paddingHorizontal: 12,
+    // paddingTop: 22,
     paddingTop: 22,
-    color: '#333',
+    color: '#2F50C1',
   },
 });
 
