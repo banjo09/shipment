@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: 16,
-    color: '#6C63FF', // Purple color from design
+    color: '#2F50C1', // Purple color from design
     fontWeight: '500',
     marginTop: 10,
   },
