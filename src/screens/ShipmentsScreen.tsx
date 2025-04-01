@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,9 @@ import {
   ScrollView,
   Image,
   FlatList,
-  Modal
+  Modal,
+  ActivityIndicator,
+  RefreshControl
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,6 +21,7 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckIcon from '../utils/CheckIcon';
 import FilterModal from '../components/FilterModal';
+import { getShipmentList, getShipmentStatusList } from '../utils/apiService';
 // barcode-scan MaterialCommunityIcons
 // arrows-expand Foundation
 // Feather search
@@ -42,6 +45,9 @@ type ShipmentItem = {
 };
 
 const ShipmentsScreen = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [apiError, setApiError] = useState('');
   const [searchText, setSearchText] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -161,6 +167,98 @@ const ShipmentsScreen = () => {
     },
   ]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const [statusList, shipments] = await Promise.all([
+          getShipmentStatusList(),
+          getShipmentList(searchText),
+        ]);
+
+        // Transform API data to match your UI structure
+        const transformedShipments = shipments.data.map((item: any) => ({
+          id: item.name,
+          awb: item.awb_number,
+          route: `${item.origin} → ${item.destination}`,
+          status: item.status,
+          marked: false,
+          expanded: false,
+          origin: {
+            address: item.origin,
+            street: item.origin_address,
+          },
+          destination: {
+            address: item.destination,
+            street: item.destination_address,
+          },
+        }));
+
+        setShipments(transformedShipments);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setApiError('Failed to load shipments. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [searchText]);
+
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      const fetchSearchResults = async () => {
+        try {
+          const response = await getShipmentList(searchText);
+          // Update state with search results
+        } catch (error) {
+          console.error('Search error:', error);
+        }
+      };
+
+      if (searchText.trim()) {
+        fetchSearchResults();
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchText]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const [statusList, shipments] = await Promise.all([
+        getShipmentStatusList(),
+        getShipmentList(searchText),
+      ]);
+
+      const transformedShipments = shipments.data.map((item: any) => ({
+        id: item.name,
+        awb: item.awb_number,
+        route: `${item.origin} → ${item.destination}`,
+        status: item.status,
+        marked: false,
+        expanded: false,
+        origin: {
+          address: item.origin,
+          street: item.origin_address,
+        },
+        destination: {
+          address: item.destination,
+          street: item.destination_address,
+        },
+      }));
+
+      setShipments(transformedShipments);
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+      setApiError('Failed to refresh shipments. Please try again.');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   const toggleMark = (id: string) => {
     setShipments(shipments.map(item =>
       item.id === id ? { ...item, marked: !item.marked } : item
@@ -203,6 +301,25 @@ const ShipmentsScreen = () => {
       selectedFilters.includes(item.status);
     return matchesSearch && matchesStatus;
   });
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#2F50C1" />
+      </View>
+    );
+  }
+
+  if (apiError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{apiError}</Text>
+        <TouchableOpacity onPress={() => setApiError('')}>
+          <Text style={styles.retryText}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -258,7 +375,6 @@ const ShipmentsScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Shipments Header */}
       <View style={styles.shipmentsHeader}>
         <Text style={styles.shipmentsTitle}>Shipments</Text>
         <TouchableOpacity style={styles.markAllContainer} onPress={markAll}>
@@ -274,6 +390,14 @@ const ShipmentsScreen = () => {
       <FlatList
         data={filteredShipments}
         keyExtractor={item => item.id}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            colors={['#2F50C1']}
+            tintColor="#2F50C1"
+          />
+        }
         renderItem={({ item }) => (
           <View
             style={[
@@ -282,7 +406,6 @@ const ShipmentsScreen = () => {
                 borderColor: '#6E91EC',
                 borderWidth: 2,
                 borderRadius: 10,
-                // backgroundColor: '#FFF'
               }
             ]}
           >
@@ -397,55 +520,6 @@ const ShipmentsScreen = () => {
           </View>
         )}
       />
-
-      {/* <Modal
-        visible={showFilterModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowFilterModal(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <TouchableOpacity onPress={() => setShowFilterModal(false)}>
-                <Text style={styles.modalCancelText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <Text style={styles.modalTitle}>Filters</Text>
-
-              <TouchableOpacity onPress={applyFilters}>
-                <Text style={styles.modalDoneText}>Done</Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.filterSectionTitle}>SHIPMENT STATUS</Text>
-
-            <View style={styles.filterOptions}>
-              {['RECEIVED', 'PUTAWAY', 'DELIVERED', 'CANCELED', 'REJECTED', 'LOST', 'ON_HOLD'].map(status => (
-                <TouchableOpacity
-                  key={status}
-                  style={[
-                    styles.filterOption,
-                    selectedFilters.includes(status) && styles.filterOptionSelected
-                  ]}
-                  onPress={() => toggleFilter(status)}
-                >
-                  <Text style={[
-                    styles.filterOptionText,
-                    selectedFilters.includes(status) && styles.filterOptionTextSelected
-                  ]}>
-                    {
-                      status == 'ON_HOLD' ?
-                        'On Hold' :
-                        status.charAt(0) + status.slice(1).toLowerCase()
-                    }
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        </View>
-      </Modal> */}
       <Modal
         visible={showFilterModal}
         animationType="slide"
@@ -713,6 +787,29 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFF',
     marginLeft: 8,
+    fontWeight: '500',
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    color: '#D12030',
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  retryText: {
+    color: '#2F50C1',
+    fontSize: 16,
     fontWeight: '500',
   },
 });
