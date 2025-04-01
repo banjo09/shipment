@@ -41,20 +41,44 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
 
   const buttonAnim = useRef(new Animated.Value(0)).current;
 
+
+  // Use to monitor if the component is mounted
+  // This is to prevent memory leaks when navigating away from the screen
+  // and the component is still trying to animate
+  const isMounted = useRef(false);
+
+  const triggerExitAnimation = () => {
+    Animated.timing(buttonAnim, {
+      toValue: 100,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
   useEffect(() => {
-    if (!visible) {
-      // Animate button down when closing
-      Animated.timing(buttonAnim, {
-        toValue: 100,
-        duration: 9000,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      // Reset position when opening
-      // buttonAnim.setValue(0);
-    }
-    return buttonAnim.setValue(0);
-  }, [visible]);
+    isMounted.current = true;
+
+    // Set up navigation listener for when screen is blurring (navigating away)
+    const unsubscribe = navigation.addListener('blur', () => {
+      if (isMounted.current && visible) {
+        triggerExitAnimation();
+      }
+    });
+
+    return () => {
+      // isMounted.current = false;
+      unsubscribe();
+    };
+  }, [navigation, visible]);
+
+  // useEffect(() => {
+  //   if (visible) {
+  //     // Reset animation when modal becomes visible
+  //     buttonAnim.setValue(0);
+  //   } else {
+  //     triggerExitAnimation();
+  //   }
+  // }, [visible]);
 
   const handlePasswordChange = (text: string) => {
     setPassword(text);
@@ -72,7 +96,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
       password: ''
     };
 
-    // URL validation
     if (!url.trim()) {
       newErrors.url = 'URL is required';
       valid = false;
@@ -81,7 +104,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
       valid = false;
     }
 
-    // Email validation
     if (!email.trim()) {
       newErrors.email = 'Email is required';
       valid = false;
@@ -90,7 +112,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
       valid = false;
     }
 
-    // Password validation
     if (!password) {
       newErrors.password = 'Password is required';
       valid = false;
@@ -111,6 +132,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
       navigation.replace('MainApp');
     }
   };
+  const disabledValue = !url.trim() || !email.trim() || !password.trim() ||
+    Object.values(errors).some(error => error !== '')
 
   return (
     <Modal
@@ -141,14 +164,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
               Please enter your First, Last name and your phone number in order to register
             </Text>
             <FloatingLabelInput
-              // label="URL"
-              // value={url}
-              // onChangeText={setUrl}
-              // keyboardType="url"
-              // autoCapitalize="none"
-              // prefix="https://"
-
-
               label="URL"
               value={url}
               onChangeText={(text) => {
@@ -190,15 +205,21 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
               transform: [{
                 translateY: buttonAnim.interpolate({
                   inputRange: [0, 100],
-                  // inputRange: [0, 1],
                   outputRange: [0, 100]
-                  // outputRange: [100, 0]
                 })
-              }]
+              }],
+              opacity: buttonAnim.interpolate({
+                inputRange: [0, 50, 100],
+                outputRange: [1, 0.5, 0]
+              })
             }}
           >
             <TouchableOpacity
-              style={styles.loginButton}
+              disabled={disabledValue}
+              style={[
+                styles.loginButton,
+                disabledValue && { backgroundColor: '#EAE7F2' }
+              ]}
               onPress={handleLogin}
             >
               <Text style={styles.loginButtonText}>Login</Text>
