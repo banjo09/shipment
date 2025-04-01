@@ -3,26 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type FilterModalProps = {
-  // visible: boolean;
-  // onClose: () => void;
-  // onApply: () => void;
-  // selectedFilters: string[];
-  // toggleFilter: (filter: string) => void;
-
   visible: boolean;
   onClose: () => void;
-  onApply: (selectedFilters: string[]) => void;  // Updated to accept filters
-  initialSelectedFilters: string[];  // New prop for initial state
+  onApply: (selectedFilters: string[]) => void;
+  initialSelectedFilters: string[];
 
 };
 
 const FilterModal = ({
-  // onClose,
-  // onApply,
-  // selectedFilters,
-  // toggleFilter,
-
-
   visible,
   onClose,
   onApply,
@@ -90,77 +78,6 @@ const FilterModal = ({
 };
 
 const styles = StyleSheet.create({
-  // modalContainer: {
-  //   flex: 1,
-  //   justifyContent: 'flex-end',
-  //   backgroundColor: 'rgba(0,0,0,0.5)',
-  //   position: 'absolute',
-  //   top: 0,
-  //   left: 0,
-  //   right: 0,
-  //   bottom: 0,
-  // },
-  // modalContent: {
-  //   backgroundColor: '#FFF',
-  //   borderTopLeftRadius: 20,
-  //   borderTopRightRadius: 20,
-  //   padding: 20,
-  //   maxHeight: '70%',
-  //   position: 'absolute',
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0,
-  // },
-  // modalHeader: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   alignItems: 'center',
-  //   marginBottom: 20,
-  // },
-  // modalCancelText: {
-  //   color: '#666',
-  //   fontSize: 16,
-  // },
-  // modalTitle: {
-  //   fontSize: 18,
-  //   fontWeight: 'bold',
-  //   color: '#333',
-  // },
-  // modalDoneText: {
-  //   color: '#2F50C1',
-  //   fontSize: 16,
-  //   fontWeight: '500',
-  // },
-  // filterSectionTitle: {
-  //   color: '#999',
-  //   fontSize: 14,
-  //   marginBottom: 15,
-  //   fontWeight: '500',
-  // },
-  // filterOptions: {
-  //   flexDirection: 'row',
-  //   flexWrap: 'wrap',
-  // },
-  // filterOption: {
-  //   borderWidth: 1,
-  //   borderColor: '#DDD',
-  //   borderRadius: 20,
-  //   paddingVertical: 8,
-  //   paddingHorizontal: 15,
-  //   marginRight: 10,
-  //   marginBottom: 10,
-  // },
-  // filterOptionSelected: {
-  //   borderColor: '#2F50C1',
-  //   backgroundColor: '#F0EEFF',
-  // },
-  // filterOptionText: {
-  //   color: '#666',
-  // },
-  // filterOptionTextSelected: {
-  //   color: '#2F50C1',
-  // },
-
   modalContainer: {
     flex: 1,
     justifyContent: 'flex-end',
