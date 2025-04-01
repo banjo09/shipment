@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Dimensions
+  Dimensions,
+  Animated
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FloatingLabelInput from './FloatingLabelInput';
@@ -37,6 +38,23 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
   });
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
+
+  const buttonAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!visible) {
+      // Animate button down when closing
+      Animated.timing(buttonAnim, {
+        toValue: 100,
+        duration: 9000,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Reset position when opening
+      // buttonAnim.setValue(0);
+    }
+    return buttonAnim.setValue(0);
+  }, [visible]);
 
   const handlePasswordChange = (text: string) => {
     setPassword(text);
@@ -87,7 +105,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
   };
 
   const handleLogin = () => {
-    if (validateForm()) {
+    if (!validateForm()) {
       // Handle login logic here
       console.log('Logging in with:', { url, email, password });
       navigation.replace('MainApp');
@@ -167,12 +185,25 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
 
           </ScrollView>
 
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={handleLogin}
+          <Animated.View
+            style={{
+              transform: [{
+                translateY: buttonAnim.interpolate({
+                  inputRange: [0, 100],
+                  // inputRange: [0, 1],
+                  outputRange: [0, 100]
+                  // outputRange: [100, 0]
+                })
+              }]
+            }}
           >
-            <Text style={styles.loginButtonText}>Login</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={handleLogin}
+            >
+              <Text style={styles.loginButtonText}>Login</Text>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </KeyboardAvoidingView>
     </Modal>

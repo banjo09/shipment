@@ -24,14 +24,12 @@ const LoginScreen = () => {
       {/* Background Image or Color */}
       <View style={styles.background} />
 
-      {/* Logo */}
       <Image
         source={require('../assets/images/shippexLogo.png')}
         style={styles.logo}
         resizeMode="contain"
       />
 
-      {/* Bottom Button to Show Login Modal */}
       <TouchableOpacity
         style={styles.loginButton}
         onPress={() => setModalVisible(true)}
@@ -39,7 +37,6 @@ const LoginScreen = () => {
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
 
-      {/* Login Modal */}
       <LoginModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
