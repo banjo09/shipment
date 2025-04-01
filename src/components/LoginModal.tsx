@@ -9,13 +9,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
-  Animated
+  Animated,
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FloatingLabelInput from './FloatingLabelInput';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { login } from '../utils/apiService';
 
 type LoginModalProps = {
   visible: boolean;
@@ -36,6 +39,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
     email: '',
     password: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
@@ -125,11 +130,31 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
     return valid;
   };
 
-  const handleLogin = () => {
-    if (!validateForm()) {
-      // Handle login logic here
-      console.log('Logging in with:', { url, email, password });
-      navigation.replace('MainApp');
+  const handleLogin = async () => {
+    navigation.replace('MainApp');
+
+    if (validateForm()) {
+      // console.log('Logging in with:', { url, email, password });
+      // navigation.replace('MainApp');
+
+      setLoading(true);
+      setLoginError(null);
+
+      try {
+        const response = await login(email, password);
+        console.log('Login successful:', response);
+
+        // Store the session/token if needed
+        // await AsyncStorage.setItem('authToken', response.token);
+
+        navigation.replace('MainApp');
+      } catch (error) {
+        console.error('Login failed:', error);
+        // Alert.alert('Login Failed', 'Invalid credentials or network error');
+        setLoginError('Invalid credentials or network error');
+      } finally {
+        setLoading(false);
+      }
     }
   };
   const disabledValue = !url.trim() || !email.trim() || !password.trim() ||
@@ -215,15 +240,24 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
             }}
           >
             <TouchableOpacity
-              disabled={disabledValue}
+              disabled={disabledValue || loading}
               style={[
                 styles.loginButton,
                 disabledValue && { backgroundColor: '#EAE7F2' }
               ]}
               onPress={handleLogin}
             >
-              <Text style={styles.loginButtonText}>Login</Text>
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={styles.loginButtonText}>Login</Text>
+              )}
             </TouchableOpacity>
+            {loginError && (
+              <Text style={{ color: 'red', textAlign: 'center', marginTop: 10 }}>
+                {loginError}
+              </Text>
+            )}
           </Animated.View>
         </View>
       </KeyboardAvoidingView>
