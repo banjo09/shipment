@@ -1,6 +1,6 @@
-# Shipment Tracker App
+# Shipment App
 
-A React Native mobile application that allows drivers to manage their shipment status.
+A React Native mobile application that allows drivers to manage and track their shipment status.
 
 ## Overview
 
@@ -115,16 +115,17 @@ The APK will be generated at `android/app/build/outputs/apk/release/app-release.
 ## Project Structure
 
 ```
-shipment-tracker-app/
+shipment/
 ├── android/              # Android native code
 ├── ios/                  # iOS native code
 ├── src/
 │   ├── assets/           # Images, fonts, etc.
+│   │   ├── images/       # Image files
+│   │   └── screenshots/  # Screenshots images
 │   ├── components/       # Reusable components
 │   ├── navigation/       # Navigation configuration
 │   ├── screens/          # Screen components
 │   ├── services/         # API services
-│   ├── store/            # State management
 │   ├── types/            # TypeScript type definitions
 │   └── utils/            # Utility functions
 ├── App.tsx               # Root component
@@ -215,8 +216,8 @@ Shipment data is cached locally for offline access when possible
 
 ## Contact
 
-[olabanjoolaleye@gmail.com]
+[Email](olabanjoolaleye@gmail.com)
 
 ## License
 
-[MIT]
+MIT

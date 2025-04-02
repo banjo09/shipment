@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,20 +7,16 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { SplashScreenNavigationProp } from '../types/navigation';
 
-type SplashScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Splash'>;
 
 const { width, height } = Dimensions.get('window');
 
 const SplashScreen = () => {
   const navigation = useNavigation<SplashScreenNavigationProp>();
 
-  // Container growth values
   const containerScale = useSharedValue(1);
 
-  // Logo movement and scaling
   const topLogoY = useSharedValue(0);
   const bottomLogoY = useSharedValue(0);
   const topLogoScale = useSharedValue(1);

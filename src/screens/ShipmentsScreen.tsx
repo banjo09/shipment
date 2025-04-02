@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   Image,
   FlatList,
   Modal,
@@ -21,7 +20,7 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckIcon from '../utils/CheckIcon';
 import FilterModal from '../components/FilterModal';
-import { getShipmentList, getShipmentStatusList } from '../utils/apiService';
+import { getShipmentList, getShipmentStatusList } from '../services/apiService';
 // barcode-scan MaterialCommunityIcons
 // arrows-expand Foundation
 // Feather search

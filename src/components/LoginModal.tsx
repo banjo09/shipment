@@ -17,15 +17,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import FloatingLabelInput from './FloatingLabelInput';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
-import { login } from '../utils/apiService';
+import { login } from '../services/apiService';
+import { LoginModalProps, LoginScreenNavigationProp } from '../types/navigation';
 
-type LoginModalProps = {
-  visible: boolean;
-  onClose: () => void;
-};
-
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
   const [url, setUrl] = useState('');

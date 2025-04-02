@@ -1,8 +1,7 @@
 import axios from 'axios';
-import {handleApiError} from './errorHandler';
+import {handleApiError} from '../utils/errorHandler';
 
 const BASE_URL = 'https://shippex-demo.bc.brandimic.com/api/method';
-// const BASE_URL = 'https://reqres.in/api/users/2';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -43,14 +42,14 @@ export const login = async (email: string, password: string) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log('response', response);
+    // console.log('response', response);
     return response.data;
 
     // const response = await api.get('');
     // console.log('response', response);
     // return response.data;
   } catch (error) {
-    console.log('error login', error);
+    // console.log('error login', error);
     throw handleApiError(error);
   }
 };
@@ -80,8 +79,6 @@ export const getShipmentList = async (searchTerm = '') => {
         }),
       },
     });
-    // const response = await api.get('/');
-    console.log('response', response);
     return response.data;
   } catch (error) {
     throw error;

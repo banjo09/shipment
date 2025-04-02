@@ -1,15 +1,9 @@
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
-// import SplashScreen from '../screens/SplashScreen';
 import MainTabNavigator from './MainTabNavigator';
-import NewSplashScreen from '../screens/NewSplashScreen';
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
+import { RootStackParamList } from '../types/navigation';
 
-export type RootStackParamList = {
-  Splash: undefined;
-  MainApp: undefined;
-  Login: undefined;
-};
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -25,7 +19,6 @@ const AppNavigator = () => {
       <Stack.Screen
         name="Splash"
         component={SplashScreen}
-        // component={NewSplashScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
