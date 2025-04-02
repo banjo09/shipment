@@ -22,7 +22,8 @@ This Shipment Tracker app features:
 - React Native
 - TypeScript
 - React Navigation
-- [Other libraries used]
+- React Native Reanimated
+- React Native Splash Screen
 
 ## Features
 
@@ -37,10 +38,6 @@ This Shipment Tracker app features:
   - Display of shipments with status indicators (Received, Canceled, etc.)
   - Implementation using FlatList
   - Pull-to-refresh functionality
-
-### Bonus Features
-
-- [Any additional features you've implemented]
 
 ## Installation
 
@@ -57,8 +54,8 @@ This Shipment Tracker app features:
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/[your-username]/shipment-tracker-app.git
-   cd shipment-tracker-app
+   git clone https://github.com/banjo09/shipment.git
+   cd shipment
    ```
 
 2. Install dependencies:
@@ -162,6 +159,51 @@ yarn test
 ## API Integration
 
 The app integrates with [API details if applicable].
+This app integrates with the Shippex API, a shipment management system built on the Frappe framework. The following endpoints are used:
+
+1. Login API
+
+Method: POST
+Endpoint: https://shippex-demo.bc.brandimic.com/api/method/login
+Body (form-data):
+
+usr: User email (e.g., test@brandimic.com)
+pwd: User password (e.g., testy123@)
+
+Purpose: Authenticates users and returns session tokens required for subsequent API calls
+
+2. Shipment Status List API
+
+Method: GET
+Endpoint: https://shippex-demo.bc.brandimic.com/api/method/frappe.client.get_list
+Body (form-data):
+
+doctype: "AWB Status"
+fields: ["*"]
+
+Purpose: Fetches all possible shipment statuses (Received, Canceled, etc.)
+
+3. Shipment List API
+
+Method: GET
+Endpoint: https://shippex-demo.bc.brandimic.com/api/method/frappe.client.get_list
+Body (raw JSON):
+jsonCopy{
+"doctype": "AWB",
+"fields": ["*"],
+"filters": {
+"name": ["like", "%search_term%"]
+}
+}
+
+Purpose: Retrieves shipments (Air Waybills) with optional filtering by name/ID
+
+### API Usage Notes
+
+Authentication is required before accessing any other endpoints
+The app maintains session tokens and refreshes them when needed
+All API responses are handled with proper error management
+Shipment data is cached locally for offline access when possible
 
 ## Contributing
 
