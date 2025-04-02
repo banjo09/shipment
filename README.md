@@ -13,10 +13,6 @@ This Shipment Tracker app features:
 
 ## Screenshots
 
-[Screenshots will be added here]
-
-## Screenshots
-
 |                   Splash Screen                    |                    Splash1 Screen                    |                         Blue                         |                      Login                       |                      LoginModal                      |                         LoginModalFilled                         |                   Loader Screen                    |                  Shipments Screen                  |                        ShipmentsScreen                         |                       ShipmentItems                        |
 | :------------------------------------------------: | :--------------------------------------------------: | :--------------------------------------------------: | :----------------------------------------------: | :--------------------------------------------------: | :--------------------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------------------: | :--------------------------------------------------------: |
 | ![Splash](src/assets/screenshots/SplashScreen.png) | ![Splash1](src/assets/screenshots/SplashScreen1.png) | ![BlueScreen](src/assets/screenshots/BlueScreen.png) | ![Login](src/assets/screenshots/LoginScreen.png) | ![LoginModal](src/assets/screenshots/LoginModal.png) | ![LoginModalFilled](src/assets/screenshots/LoginModalFilled.png) | ![Loader](src/assets/screenshots/LoaderScreen.png) | ![Shipments](src/assets/screenshots/Shipments.png) | ![ShipmentsScreen](src/assets/screenshots/ShipmentsScreen.png) | ![ShipmentItems](src/assets/screenshots/ShipmentItems.png) |
