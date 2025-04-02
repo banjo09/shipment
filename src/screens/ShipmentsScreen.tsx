@@ -355,8 +355,7 @@ const ShipmentsScreen = () => {
           value={searchText}
           onChangeText={setSearchText}
         />
-        <Icon name="search" size={20} color="#999" style={styles.searchIcon} />
-        {/* <Icon name="search" size={20} color="#999" style={styles.searchIcon} /> */}
+        <Feather name="search" size={20} color="#999" style={styles.searchIcon} />
       </View>
 
       <View style={styles.actionButtons}>
@@ -369,7 +368,6 @@ const ShipmentsScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.addScanButton}>
-          <FontAwesome name="qrcode" size={20} color="#FFF" />
           <MaterialCommunityIcons name="line-scan" size={20} color="#FFF" />
           <Text style={styles.addScanButtonText}>Add Scan</Text>
         </TouchableOpacity>
@@ -459,14 +457,17 @@ const ShipmentsScreen = () => {
 
               <TouchableOpacity
                 onPress={() => toggleExpansion(item.id)}
-                style={styles.expandButton}
+                style={[
+                  styles.expandButton,
+                  {
+                    backgroundColor: expandedItems.has(item.id) ? '#6E91EC' : '#FFFFFF'
+                  }
+                ]}
               >
-                <Icon
-                  // name="more-vert"
-                  // name={expandedItems.has(item.id) ? 'arrows-compress' : 'arrows-expand'}
-                  name={expandedItems.has(item.id) ? 'arrow-upward' : 'arrow-downward'}
-                  size={24}
-                  color="#999"
+                <AntDesign
+                  name="arrowsalt"
+                  size={18}
+                  color={expandedItems.has(item.id) ? "#FFFFFF" : '#4561DB'}
                 />
               </TouchableOpacity>
             </View>
@@ -724,6 +725,14 @@ const styles = StyleSheet.create({
 
   expandButton: {
     marginLeft: 10,
+    // backgroundColor: '#FFFFFF',
+    padding: 5,
+    borderRadius: 15,
+    // shadowColor: '#4561DB40',
+    // shadowOffset: { width: 0, height: 4 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 15,
+    // elevation: 8,
   },
   expandedContent: {
     width: '100%',

@@ -28,9 +28,7 @@ type LoginModalProps = {
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose }) => {
-  // const [url, setUrl] = useState('https://www.brandimic.com');
   const [url, setUrl] = useState('');
-  // const [email, setEmail] = useState('all@brandimic.com');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayPassword, setDisplayPassword] = useState<string>("");

@@ -1,23 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import LoginModal from '../components/LoginModal';
 
 const LoginScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [url, setUrl] = useState('https://www.brandimic.com');
-  const [email, setEmail] = useState('all@brandimic.com');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = () => {
-    // Simple validation
-    if (!url || !email || !password) {
-      Alert.alert('Validation Error', 'All fields are required.');
-      return;
-    }
-
-    // If valid, proceed with your logic
-    Alert.alert('Login Attempt', `URL: ${url}\nEmail: ${email}\nPassword: ${password}`);
-  };
 
   return (
     <View style={styles.container}>
