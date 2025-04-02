@@ -92,6 +92,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file(getKeystoreFile())
+            storePassword MYAPP_RELEASE_STORE_PASSWORD
+            keyAlias MYAPP_RELEASE_KEY_ALIAS
+            keyPassword MYAPP_RELEASE_KEY_PASSWORD
+        }
     }
     buildTypes {
         debug {
@@ -100,16 +106,21 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
     project.ext.vectoricons = [
-      iconFontNames: ['MaterialIcons.ttf', 'FontAwesome.ttf', 'Ionicons.ttf'] // Add the fonts you want to use
+      iconFontNames: ['MaterialIcons.ttf', 'FontAwesome.ttf', 'Ionicons.ttf', 'Feather.ttf', 'AntDesign.ttf', 'Foundation.ttf', 'MaterialCommunityIcons.ttf'] 
     ]
     apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
+}
+
+def getKeystoreFile() {
+    def storeFilePath = project.hasProperty('MYAPP_RELEASE_STORE_FILE') ? MYAPP_RELEASE_STORE_FILE : ''
+    return storeFilePath ? new File(storeFilePath) : null
 }
 
 dependencies {
@@ -121,4 +132,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    
+    implementation("androidx.core:core:1.13.1") {
+    exclude group: "com.android.support", module: "support-compat"
+}
 }
