@@ -165,7 +165,9 @@ This app integrates with the Shippex API, a shipment management system built on 
 1. Login API
 
 Method: POST
+
 Endpoint: https://shippex-demo.bc.brandimic.com/api/method/login
+
 Body (form-data):
 
 usr: User email (e.g., test@brandimic.com)
@@ -176,10 +178,13 @@ Purpose: Authenticates users and returns session tokens required for subsequent 
 2. Shipment Status List API
 
 Method: GET
+
 Endpoint: https://shippex-demo.bc.brandimic.com/api/method/frappe.client.get_list
+
 Body (form-data):
 
 doctype: "AWB Status"
+
 fields: ["*"]
 
 Purpose: Fetches all possible shipment statuses (Received, Canceled, etc.)
@@ -187,8 +192,11 @@ Purpose: Fetches all possible shipment statuses (Received, Canceled, etc.)
 3. Shipment List API
 
 Method: GET
+
 Endpoint: https://shippex-demo.bc.brandimic.com/api/method/frappe.client.get_list
+
 Body (raw JSON):
+
 jsonCopy{
 "doctype": "AWB",
 "fields": ["*"],
@@ -216,7 +224,7 @@ Shipment data is cached locally for offline access when possible
 
 ## Contact
 
-[Email](olabanjoolaleye@gmail.com)
+Email - olabanjoolaleye@gmail.com
 
 ## License
 
